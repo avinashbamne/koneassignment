@@ -1,0 +1,8 @@
+validate_branch_and_tag:
+  stage: validate
+  script:
+    - |
+      echo "Validating branch and tag..."
+      [[ "${CI_COMMIT_REF_NAME}" =~ ^({{ branch_regex }})$ ]] || exit 1
+      [[ -z "${CI_COMMIT_TAG}" || "${CI_COMMIT_TAG}" =~ {{ tag_pattern }} ]] || exit 1
+

@@ -1,0 +1,11 @@
+code_analysis:
+  stage: test
+  script:
+    - echo "Running code analysis for {{ language }}"
+    {% if language == "python" %}
+    - pip install bandit
+    - bandit -r .
+    {% elif language == "java" %}
+    - mvn sonar:sonar
+    {% endif %}
+

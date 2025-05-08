@@ -1,0 +1,18 @@
+artifact_creation:
+  stage: package
+  script:
+    - echo "Creating artifact for {{ language }}"
+    {% if language == "python" %}
+    - python setup.py sdist bdist_wheel
+    - ls dist/
+    {% elif language == "java" %}
+    - mvn package
+    - ls target/
+    {% elif language == "node" %}
+    - npm run build
+    {% endif %}
+  artifacts:
+    paths:
+      - dist/
+      - target/
+

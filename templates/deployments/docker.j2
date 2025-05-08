@@ -1,0 +1,6 @@
+docker_deploy:
+  stage: deploy
+  script:
+    - docker build -t {{ project.name }} .
+    - docker push your-docker-repo/{{ project.name }}
+

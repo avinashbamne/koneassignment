@@ -1,0 +1,47 @@
+ci_checks:
+  stage: test
+  script:
+    - echo "Running CI checks for python"
+
+code_analysis:
+  stage: test
+  script:
+    - echo "Running code analysis for python"
+    
+    - pip install bandit
+    - bandit -r .
+    
+
+artifact_creation:
+  stage: package
+  script:
+    - echo "Creating artifact for python"
+    
+    - python setup.py sdist bdist_wheel
+    - ls dist/
+    
+  artifacts:
+    paths:
+      - dist/
+      - target/
+
+python_setup:
+  stage: setup
+  script:
+    - python -m venv venv
+    - source venv/bin/activate
+    - pip install -r requirements.txt
+
+docker_deploy:
+  stage: deploy
+  script:
+    - docker build -t order-service .
+    - docker push your-docker-repo/order-service
+
+validate_branch_and_tag:
+  stage: validate
+  script:
+    - |
+      echo "Validating branch and tag..."
+      [[ "${CI_COMMIT_REF_NAME}" =~ ^(dev|staging|main)$ ]] || exit 1
+      [[ -z "${CI_COMMIT_TAG}" || "${CI_COMMIT_TAG}" =~ ^v\d+\.\d+\.\d+$ ]] || exit 1

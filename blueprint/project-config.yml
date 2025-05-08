@@ -1,0 +1,16 @@
+project:
+  name: "order-service"
+  language: "python"
+  build_tool: "pip"
+  build_steps:
+    - ci-checks
+    - code-analysis
+    - artifact-creation
+  deployment_method: "docker"
+  branch_strategy:
+    allowed_branches:
+      - dev
+      - staging
+      - main
+    tag_pattern: "^v\\d+\\.\\d+\\.\\d+$"
+
